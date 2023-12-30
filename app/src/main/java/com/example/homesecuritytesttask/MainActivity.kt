@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.homesecuritytesttask.ui.theme.HomeSecurityTestTaskTheme
 import android.graphics.Color.parseColor
+import androidx.compose.ui.unit.sp
 import com.example.homesecuritytesttask.controller.CameraScreen
 import com.example.homesecuritytesttask.controller.DoorScreen
 
@@ -53,7 +54,7 @@ fun HomeSecurityScreen() {
             title = {
                 Text(
                     text = "Mой дом",
-                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 22.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
