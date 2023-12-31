@@ -28,20 +28,28 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.homesecuritytesttask.domain.Door
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun DoorScreen() {
     val viewModel: DoorScreenViewModel = viewModel()
     val doors by viewModel.doors.observeAsState(initial = listOf())
+    val isRefreshing by viewModel.isRefreshing.observeAsState(false)
 
     Column(
         modifier = Modifier
             .padding(18.dp)
             .fillMaxSize()
     ) {
-        LazyColumn {
-            items(doors) { door ->
-                Door(door)
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = { viewModel.refresh() },
+        ) {
+            LazyColumn {
+                items(doors) { door ->
+                    Door(door)
+                }
             }
         }
     }

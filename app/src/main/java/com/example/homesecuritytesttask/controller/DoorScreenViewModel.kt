@@ -19,6 +19,9 @@ class DoorScreenViewModel : ViewModel() {
     private val repositoryLocal: RepositoryLocal = RepositoryLocalImpl()
     private val _doors: MutableLiveData<List<Door>> = MutableLiveData()
     val doors: LiveData<List<Door>> = _doors
+    private val _isRefreshing = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
+
 
     init {
         viewModelScope.launch {
@@ -41,6 +44,7 @@ class DoorScreenViewModel : ViewModel() {
 
                 is DataResult.Error -> Log.d("TAG", "Can't find any doors")
             }
+            _isRefreshing.value = false
         }
     }
 
@@ -59,5 +63,10 @@ class DoorScreenViewModel : ViewModel() {
             }
         }
         return result.await()
+    }
+
+    fun refresh() {
+        _isRefreshing.value = true
+        getDoorsFromServer()
     }
 }

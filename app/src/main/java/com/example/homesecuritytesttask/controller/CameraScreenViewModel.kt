@@ -19,6 +19,8 @@ class CameraScreenViewModel : ViewModel() {
     private val repositoryLocal: RepositoryLocal = RepositoryLocalImpl()
     private val _cameras: MutableLiveData<List<Camera>> = MutableLiveData()
     val cameras: LiveData<List<Camera>> = _cameras
+    private val _isRefreshing = MutableLiveData(false)
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     init {
         viewModelScope.launch {
@@ -41,6 +43,7 @@ class CameraScreenViewModel : ViewModel() {
 
                 is DataResult.Error -> Log.d("TAG", "Can't find any cameras")
             }
+            _isRefreshing.value = false
         }
     }
 
@@ -58,5 +61,10 @@ class CameraScreenViewModel : ViewModel() {
             }
         }
         return result.await()
+    }
+
+    fun refresh() {
+        _isRefreshing.value = true
+        getCamerasFromServer()
     }
 }

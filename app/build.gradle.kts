@@ -69,7 +69,8 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
+    implementation ("androidx.compose.material3:material3:1.1.2")
 
     //Ktor
     implementation("io.ktor:ktor-client-core:2.3.5")
@@ -78,7 +79,6 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:2.3.5")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-//    implementation("io.ktor:ktor-client-cio:$2.3.5")
 
     //Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")

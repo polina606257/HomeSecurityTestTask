@@ -1,5 +1,6 @@
 package com.example.homesecuritytesttask.controller
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,21 +32,30 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.homesecuritytesttask.R
 import com.example.homesecuritytesttask.domain.Camera
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun CameraScreen() {
     val viewModel: CameraScreenViewModel = viewModel()
     val cameras by viewModel.cameras.observeAsState(initial = listOf())
+    val isRefreshing by viewModel.isRefreshing.observeAsState(false)
 
-    Column(
-        modifier = Modifier
-            .padding(18.dp)
-            .fillMaxSize()
-    ) {
-        Text(text = "Гостиная", fontSize = 20.sp, modifier = Modifier.padding(bottom = 8.dp))
-        LazyColumn {
-            items(cameras) { camera ->
-                Camera(camera)
+        Column(
+            modifier = Modifier
+                .padding(18.dp)
+                .fillMaxSize()
+        ) {
+            Text(text = "Гостиная", fontSize = 20.sp, modifier = Modifier.padding(bottom = 8.dp))
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing),
+                onRefresh = { viewModel.refresh() },
+            ) {
+            LazyColumn {
+                items(cameras) { camera ->
+                    Camera(camera)
+                }
             }
         }
     }
