@@ -5,7 +5,7 @@ import com.example.homesecuritytesttask.data.remoteData.RemoteDataSource
 import com.example.homesecuritytesttask.domain.Camera
 import com.example.homesecuritytesttask.domain.Door
 
-class RepositoryImpl : Repository {
+class RepositoryRemoteImpl : RepositoryRemote {
     private val remoteDataSource: RemoteDataSource = RemoteDataSource()
     override suspend fun getCameras(): DataResult<List<Camera>> {
         return try {

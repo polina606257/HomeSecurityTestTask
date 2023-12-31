@@ -1,5 +1,6 @@
 package com.example.homesecuritytesttask.domain
 
+import io.realm.RealmObject
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,10 +10,10 @@ data class DoorsResponse (
 )
 
 @Serializable
-data class Door (
-    val name: String,
-    val room: String? = null,
-    val id: Long,
-    val favorites: Boolean,
-    val snapshot: String? = null
-)
+open class Door : RealmObject() {
+    var id: Long = 0
+    var name: String = ""
+    var room: String? = null
+    var favorites: Boolean = false
+    var snapshot: String? = null
+}

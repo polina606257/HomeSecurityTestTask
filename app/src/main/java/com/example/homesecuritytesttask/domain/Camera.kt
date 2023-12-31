@@ -1,5 +1,6 @@
 package com.example.homesecuritytesttask.domain
 
+import io.realm.RealmObject
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,11 +16,11 @@ data class CamerasData(
 )
 
 @Serializable
-data class Camera (
-    val name: String,
-    val snapshot: String,
-    val room: String? = null,
-    val id: Long,
-    val favorites: Boolean,
-    val rec: Boolean
-)
+open class Camera : RealmObject()  {
+    var id: Long = 0
+    var name: String = ""
+    var snapshot: String = ""
+    var room: String? = null
+    var favorites: Boolean = false
+    var rec: Boolean  = false
+}

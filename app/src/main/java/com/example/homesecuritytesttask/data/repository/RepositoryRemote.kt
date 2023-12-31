@@ -4,7 +4,7 @@ import com.example.homesecuritytesttask.data.DataResult
 import com.example.homesecuritytesttask.domain.Camera
 import com.example.homesecuritytesttask.domain.Door
 
-interface Repository {
+interface RepositoryRemote {
     suspend fun getCameras() : DataResult<List<Camera>>
 
     suspend fun getDoors(): DataResult<List<Door>>
