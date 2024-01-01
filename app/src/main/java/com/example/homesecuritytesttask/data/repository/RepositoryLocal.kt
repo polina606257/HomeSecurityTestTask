@@ -9,6 +9,6 @@ interface RepositoryLocal {
     suspend fun getAllCameras() : DataResult<List<Camera>>
     suspend fun addDoor(door: Door)
     suspend fun getAllDoors() : DataResult<List<Door>>
-
     suspend fun updateCamera(camera: Camera)
+    suspend fun updateDoor(door: Door)
 }

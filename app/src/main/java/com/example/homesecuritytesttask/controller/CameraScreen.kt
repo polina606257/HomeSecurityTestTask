@@ -92,7 +92,7 @@ fun CameraItem(camera: Camera) {
                     .size(30.dp)
                     .clickable(onClick = {
                         camera.favorites = !camera.favorites
-                        viewModel.updateFavoriteForCamera(camera)
+                        viewModel.updateCamera(camera)
                     })
             )
         }

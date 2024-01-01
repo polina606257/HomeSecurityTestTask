@@ -48,4 +48,12 @@ class RepositoryLocalImpl(private val localDataSource: LocalDataSource = LocalDa
             Log.d("TAG", "Couldn't update camera")
         }
     }
+
+    override suspend fun updateDoor(door: Door) {
+        try {
+            localDataSource.updateDoor(door)
+        } catch (e: Exception) {
+            Log.d("TAG", "Couldn't update door")
+        }
+    }
 }

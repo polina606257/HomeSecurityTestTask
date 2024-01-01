@@ -46,8 +46,7 @@ class LocalDataSource {
         Realm
             .getDefaultInstance()
             .executeTransaction { realm ->
-                val objectPerson = realm.createObject(Door::class.java)
-                objectPerson.id = door.id
+                val objectPerson = realm.createObject(Door::class.java, door.id)
                 objectPerson.name = door.name
                 objectPerson.room = door.room
                 objectPerson.favorites = door.favorites
@@ -56,10 +55,25 @@ class LocalDataSource {
     }
 
     fun getAllDoors(): List<Door> {
-        val data = Realm
-            .getDefaultInstance()
-            .where(Door::class.java)
-            .findAll()
-        return data.map { it }
+        Realm.getDefaultInstance().use { realm ->
+            val data = realm.where(Door::class.java)
+                .findAll()
+            return realm.copyFromRealm(data)
+        }
+    }
+
+    fun updateDoor(door: Door) {
+        Realm.getDefaultInstance().executeTransaction { realm ->
+            val existingDoor = realm.where(Door::class.java)
+                .equalTo("id", door.id)
+                .findFirst()
+
+            existingDoor?.apply {
+                name = door.name
+                snapshot = door.snapshot
+                room = door.room
+                favorites = door.favorites
+            }
+        }
     }
 }

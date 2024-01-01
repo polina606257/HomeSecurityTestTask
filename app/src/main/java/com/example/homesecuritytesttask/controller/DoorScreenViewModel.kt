@@ -69,4 +69,11 @@ class DoorScreenViewModel : ViewModel() {
         _isRefreshing.value = true
         getDoorsFromServer()
     }
+
+    fun updateDoor(door: Door) {
+        viewModelScope.launch {
+            async { repositoryLocal.updateDoor(door) }.await()
+            getDoorsFromDatabase()
+        }
+    }
 }

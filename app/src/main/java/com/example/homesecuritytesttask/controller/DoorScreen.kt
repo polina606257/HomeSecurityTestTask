@@ -73,7 +73,7 @@ fun DoorScreen() {
 
 @Composable
 fun DoorItem(door: Door) {
-    val viewModel: CameraScreenViewModel = viewModel()
+    val viewModel:DoorScreenViewModel = viewModel()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -110,7 +110,7 @@ fun DoorItem(door: Door) {
                         .size(30.dp)
                         .clickable(onClick = {
                             door.favorites = !door.favorites
-//                viewModel.updateFavoriteForDoor(door)
+                            viewModel.updateDoor(door)
                         })
                 )
             }
@@ -129,7 +129,7 @@ fun Door(door: Door, modifier: Modifier) {
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { change, dragAmount ->
                     val consumed = offsetX.value + dragAmount
-                    offsetX.value = consumed.coerceIn(-300f, 0f)
+                    offsetX.value = consumed.coerceIn(-380f, 0f)
                 }
             },
         shape = RoundedCornerShape(20.dp),
