@@ -1,6 +1,7 @@
 package com.example.homesecuritytesttask.controller
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,10 +23,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,6 +39,7 @@ import com.example.homesecuritytesttask.R
 import com.example.homesecuritytesttask.domain.Camera
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlin.math.roundToInt
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -42,16 +48,16 @@ fun CameraScreen() {
     val cameras by viewModel.cameras.observeAsState(initial = listOf())
     val isRefreshing by viewModel.isRefreshing.observeAsState(false)
 
-        Column(
-            modifier = Modifier
-                .padding(18.dp)
-                .fillMaxSize()
+    Column(
+        modifier = Modifier
+            .padding(18.dp)
+            .fillMaxSize()
+    ) {
+        Text(text = "Гостиная", fontSize = 20.sp, modifier = Modifier.padding(bottom = 8.dp))
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = { viewModel.refresh() },
         ) {
-            Text(text = "Гостиная", fontSize = 20.sp, modifier = Modifier.padding(bottom = 8.dp))
-            SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing),
-                onRefresh = { viewModel.refresh() },
-            ) {
             LazyColumn {
                 items(cameras) { camera ->
                     Camera(camera)
@@ -63,10 +69,19 @@ fun CameraScreen() {
 
 @Composable
 fun Camera(camera: Camera) {
+    val offsetX = remember { mutableStateOf(0f) }
+
     Card(
         modifier = Modifier
             .padding(vertical = 4.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .offset { IntOffset(x = offsetX.value.roundToInt(), 0) }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures { change, dragAmount ->
+                    val consumed = offsetX.value + dragAmount
+                    offsetX.value = consumed.coerceIn(-200f, 0f)
+                }
+            },
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
