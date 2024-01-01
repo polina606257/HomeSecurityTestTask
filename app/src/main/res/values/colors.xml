@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#03A9F4</color>
     <color name="yellow">#FFD700</color>
+    <color name="title">#333333</color>
+    <color name="sub_title">#555555</color>
 </resources>

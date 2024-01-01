@@ -16,9 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +34,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.homesecuritytesttask.R
@@ -136,26 +134,32 @@ fun Door(door: Door, modifier: Modifier) {
                     .aspectRatio(16f / 10f)
             )
         }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = door.name, modifier = Modifier.padding(24.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = door.name,
+                modifier = Modifier.padding(24.dp),
+                fontSize = 17.sp,
+                color = colorResource(
+                    id = R.color.sub_title
+                )
+            )
             Row {
                 if (door.favorites) {
                     Icon(
-                        imageVector = Icons.Default.Star,
+                        painter = painterResource(id = R.drawable.star_filled),
                         contentDescription = "favorite",
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .offset(-8.dp, 8.dp),
-                        tint = Color.Yellow
+                        tint = colorResource(id = R.color.yellow)
                     )
                 }
                 Icon(
-                    imageVector = Icons.Default.Lock,
+                    painter = painterResource(id = R.drawable.lockon),
                     contentDescription = "favorite",
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .offset(-8.dp, 8.dp),
-                    tint = Color(android.graphics.Color.parseColor("#add8e6"))
+                    tint = colorResource(id = R.color.blue),
+                    modifier = Modifier.padding(end = 16.dp, start = 8.dp)
                 )
             }
         }

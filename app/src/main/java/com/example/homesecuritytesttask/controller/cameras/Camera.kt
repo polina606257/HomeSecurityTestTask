@@ -30,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.homesecuritytesttask.R
@@ -46,7 +47,8 @@ fun CameraItem(camera: Camera) {
     ) {
         Camera(camera, modifier = Modifier.fillMaxSize())
         Box(
-            modifier = Modifier.align(Alignment.CenterEnd)
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
                 .border(1.dp, Color.LightGray, CircleShape)
         ) {
             Icon(
@@ -79,7 +81,7 @@ fun Camera(camera: Camera, modifier: Modifier = Modifier) {
                     offsetX.value = consumed.coerceIn(-150f, 0f)
                 }
             },
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
         ),
@@ -120,6 +122,13 @@ fun Camera(camera: Camera, modifier: Modifier = Modifier) {
                 }
             }
         }
-        Text(text = camera.name, modifier = Modifier.padding(24.dp))
+        Text(
+            text = camera.name,
+            modifier = Modifier.padding(24.dp),
+            fontSize = 17.sp,
+            color = colorResource(
+                id = R.color.sub_title
+            )
+        )
     }
 }
