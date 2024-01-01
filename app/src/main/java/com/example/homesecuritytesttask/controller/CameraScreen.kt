@@ -1,6 +1,7 @@
 package com.example.homesecuritytesttask.controller
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -77,14 +80,22 @@ fun CameraItem(camera: Camera) {
             .padding(8.dp)
     ) {
         Camera(camera, modifier = Modifier.fillMaxSize())
-        Icon(
-            painter = painterResource(id = R.drawable.star),
-            contentDescription = "favorite",
-            modifier = Modifier.align(Alignment.CenterEnd).clickable ( onClick = {
-                camera.favorites = !camera.favorites
-                viewModel.updateFavoriteForCamera(camera)
-            } )
-        )
+        Box(
+            modifier = Modifier.align(Alignment.CenterEnd)
+                .border(1.dp, Color.LightGray, CircleShape)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.star),
+                contentDescription = "favorite",
+                tint = colorResource(id = R.color.yellow),
+                modifier = Modifier
+                    .size(30.dp)
+                    .clickable(onClick = {
+                        camera.favorites = !camera.favorites
+                        viewModel.updateFavoriteForCamera(camera)
+                    })
+            )
+        }
     }
 }
 
@@ -100,7 +111,7 @@ fun Camera(camera: Camera, modifier: Modifier = Modifier) {
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { change, dragAmount ->
                     val consumed = offsetX.value + dragAmount
-                    offsetX.value = consumed.coerceIn(-200f, 0f)
+                    offsetX.value = consumed.coerceIn(-150f, 0f)
                 }
             },
         shape = RoundedCornerShape(20.dp),
