@@ -10,14 +10,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.homesecuritytesttask.controller.components.ProgressIndicator
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DoorScreen() {
-    val viewModel: DoorScreenViewModel = viewModel()
+    val viewModel = koinViewModel<DoorScreenViewModel>()
     val doors by viewModel.doors.observeAsState(initial = listOf())
     val isRefreshing by viewModel.isRefreshing.observeAsState(false)
     val isLoading by viewModel.isLoading.observeAsState(false)

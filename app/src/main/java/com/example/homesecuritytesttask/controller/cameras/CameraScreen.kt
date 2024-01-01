@@ -20,11 +20,12 @@ import com.example.homesecuritytesttask.R
 import com.example.homesecuritytesttask.controller.components.ProgressIndicator
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import org.koin.androidx.compose.koinViewModel
 
-@SuppressLint("SuspiciousIndentation")
+
 @Composable
 fun CameraScreen() {
-    val viewModel: CameraScreenViewModel = viewModel()
+    val viewModel = koinViewModel<CameraScreenViewModel>()
     val cameras by viewModel.cameras.observeAsState(initial = listOf())
     val isRefreshing by viewModel.isRefreshing.observeAsState(false)
     val isLoading by viewModel.isLoading.observeAsState(false)

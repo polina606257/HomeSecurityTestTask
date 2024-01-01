@@ -35,11 +35,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.homesecuritytesttask.R
 import com.example.homesecuritytesttask.domain.Camera
+import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
 fun CameraItem(camera: Camera) {
-    val viewModel: CameraScreenViewModel = viewModel()
+    val viewModel = koinViewModel<CameraScreenViewModel>()
     Box(
         modifier = Modifier
             .fillMaxSize()

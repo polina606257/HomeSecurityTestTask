@@ -7,16 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homesecuritytesttask.data.DataResult
 import com.example.homesecuritytesttask.data.repository.RepositoryLocal
-import com.example.homesecuritytesttask.data.repository.RepositoryLocalImpl
 import com.example.homesecuritytesttask.data.repository.RepositoryRemote
-import com.example.homesecuritytesttask.data.repository.RepositoryRemoteImpl
 import com.example.homesecuritytesttask.domain.Camera
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class CameraScreenViewModel : ViewModel() {
-    private val repositoryRemote: RepositoryRemote = RepositoryRemoteImpl()
-    private val repositoryLocal: RepositoryLocal = RepositoryLocalImpl()
+class CameraScreenViewModel(
+    private val repositoryRemote: RepositoryRemote, private val repositoryLocal: RepositoryLocal
+) : ViewModel() {
     private val _cameras: MutableLiveData<List<Camera>> = MutableLiveData()
     val cameras: LiveData<List<Camera>> = _cameras
     private val _isRefreshing = MutableLiveData(false)
@@ -58,6 +56,7 @@ class CameraScreenViewModel : ViewModel() {
                     _cameras.postValue(cameras.response)
                     cameras.response
                 }
+
                 is DataResult.Error -> {
                     Log.d("TAG", "Can't find any cameras")
                     null

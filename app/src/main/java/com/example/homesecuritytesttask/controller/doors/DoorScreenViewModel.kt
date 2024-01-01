@@ -7,16 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homesecuritytesttask.data.DataResult
 import com.example.homesecuritytesttask.data.repository.RepositoryLocal
-import com.example.homesecuritytesttask.data.repository.RepositoryLocalImpl
 import com.example.homesecuritytesttask.data.repository.RepositoryRemote
-import com.example.homesecuritytesttask.data.repository.RepositoryRemoteImpl
 import com.example.homesecuritytesttask.domain.Door
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class DoorScreenViewModel : ViewModel() {
-    private val repositoryRemote: RepositoryRemote = RepositoryRemoteImpl()
-    private val repositoryLocal: RepositoryLocal = RepositoryLocalImpl()
+class DoorScreenViewModel(
+    private val repositoryRemote: RepositoryRemote,
+    private val repositoryLocal: RepositoryLocal
+) : ViewModel() {
     private val _doors: MutableLiveData<List<Door>> = MutableLiveData()
     val doors: LiveData<List<Door>> = _doors
     private val _isRefreshing = MutableLiveData(false)

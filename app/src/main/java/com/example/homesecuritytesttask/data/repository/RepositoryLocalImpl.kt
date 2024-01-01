@@ -6,7 +6,7 @@ import com.example.homesecuritytesttask.data.localData.LocalDataSource
 import com.example.homesecuritytesttask.domain.Camera
 import com.example.homesecuritytesttask.domain.Door
 
-class RepositoryLocalImpl(private val localDataSource: LocalDataSource = LocalDataSource()) : RepositoryLocal {
+class RepositoryLocalImpl( private val localDataSource: LocalDataSource) : RepositoryLocal {
     override suspend fun addCamara(camera: Camera) {
         try {
             localDataSource.addCamera(camera)

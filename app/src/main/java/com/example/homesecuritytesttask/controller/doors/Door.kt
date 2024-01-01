@@ -35,15 +35,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.homesecuritytesttask.R
 import com.example.homesecuritytesttask.domain.Door
+import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
 fun DoorItem(door: Door) {
-    val viewModel: DoorScreenViewModel = viewModel()
+    val viewModel = koinViewModel<DoorScreenViewModel>()
     var isEditActive by rememberSaveable { mutableStateOf(false) }
 
     Column {
