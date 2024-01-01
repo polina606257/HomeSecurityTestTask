@@ -107,7 +107,6 @@ fun Door(door: Door, modifier: Modifier) {
     val offsetX = rememberSaveable { mutableStateOf(0f) }
     Card(
         modifier = Modifier
-            .padding(vertical = 4.dp)
             .fillMaxSize()
             .offset { IntOffset(x = offsetX.value.roundToInt(), 0) }
             .pointerInput(Unit) {
