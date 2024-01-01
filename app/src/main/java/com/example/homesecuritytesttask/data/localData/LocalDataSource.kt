@@ -9,22 +9,37 @@ class LocalDataSource {
         Realm
             .getDefaultInstance()
             .executeTransaction { realm ->
-                val objectPerson = realm.createObject(Camera::class.java)
-                objectPerson.id = camera.id
-                objectPerson.name = camera.name
-                objectPerson.snapshot = camera.snapshot
-                objectPerson.room = camera.room
-                objectPerson.favorites = camera.favorites
-                objectPerson.rec = camera.rec
+                val objectCamera = realm.createObject(Camera::class.java, camera.id)
+                objectCamera.name = camera.name
+                objectCamera.snapshot = camera.snapshot
+                objectCamera.room = camera.room
+                objectCamera.favorites = camera.favorites
+                objectCamera.rec = camera.rec
             }
     }
 
     fun getAllCameras(): List<Camera> {
-        val data = Realm
-            .getDefaultInstance()
-            .where(Camera::class.java)
-            .findAll()
-        return data.map { it }
+        Realm.getDefaultInstance().use { realm ->
+            val data = realm.where(Camera::class.java)
+                .findAll()
+            return realm.copyFromRealm(data)
+        }
+    }
+
+    fun updateCamera(camera: Camera) {
+        Realm.getDefaultInstance().executeTransaction { realm ->
+            val existingCamera = realm.where(Camera::class.java)
+                .equalTo("id", camera.id)
+                .findFirst()
+
+            existingCamera?.apply {
+                name = camera.name
+                snapshot = camera.snapshot
+                room = camera.room
+                favorites = camera.favorites
+                rec = camera.rec
+            }
+        }
     }
 
     fun addDoor(door: Door) {

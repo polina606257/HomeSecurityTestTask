@@ -1,6 +1,7 @@
 package com.example.homesecuritytesttask.domain
 
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,6 +18,7 @@ data class CamerasData(
 
 @Serializable
 open class Camera : RealmObject()  {
+    @PrimaryKey
     var id: Long = 0
     var name: String = ""
     var snapshot: String = ""

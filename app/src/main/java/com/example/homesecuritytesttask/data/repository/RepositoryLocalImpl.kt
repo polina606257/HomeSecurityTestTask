@@ -40,4 +40,12 @@ class RepositoryLocalImpl(private val localDataSource: LocalDataSource = LocalDa
             DataResult.Error(e.message)
         }
     }
+
+    override suspend fun updateCamera(camera: Camera) {
+        try {
+            localDataSource.updateCamera(camera)
+        } catch (e: Exception) {
+            Log.d("TAG", "Couldn't update camera")
+        }
+    }
 }

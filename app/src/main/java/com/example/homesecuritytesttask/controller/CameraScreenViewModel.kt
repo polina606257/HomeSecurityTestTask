@@ -67,4 +67,11 @@ class CameraScreenViewModel : ViewModel() {
         _isRefreshing.value = true
         getCamerasFromServer()
     }
+
+    fun updateFavoriteForCamera(camera: Camera) {
+        viewModelScope.launch {
+            async { repositoryLocal.updateCamera(camera) }.await()
+            getCamerasFromDatabase()
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.homesecuritytesttask.controller
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,11 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -24,7 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -60,7 +61,7 @@ fun CameraScreen() {
         ) {
             LazyColumn {
                 items(cameras) { camera ->
-                    Camera(camera)
+                    CameraItem(camera = camera)
                 }
             }
         }
@@ -68,11 +69,31 @@ fun CameraScreen() {
 }
 
 @Composable
-fun Camera(camera: Camera) {
-    val offsetX = remember { mutableStateOf(0f) }
+fun CameraItem(camera: Camera) {
+    val viewModel: CameraScreenViewModel = viewModel()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        Camera(camera, modifier = Modifier.fillMaxSize())
+        Icon(
+            painter = painterResource(id = R.drawable.star),
+            contentDescription = "favorite",
+            modifier = Modifier.align(Alignment.CenterEnd).clickable ( onClick = {
+                camera.favorites = !camera.favorites
+                viewModel.updateFavoriteForCamera(camera)
+            } )
+        )
+    }
+}
+
+@Composable
+fun Camera(camera: Camera, modifier: Modifier = Modifier) {
+    val offsetX = rememberSaveable { mutableStateOf(0f) }
 
     Card(
-        modifier = Modifier
+        modifier
             .padding(vertical = 4.dp)
             .fillMaxSize()
             .offset { IntOffset(x = offsetX.value.roundToInt(), 0) }
@@ -101,10 +122,11 @@ fun Camera(camera: Camera) {
             )
             if (camera.rec) {
                 Icon(
-                    painter = painterResource(id = R.drawable.videocam),
+                    painter = painterResource(id = R.drawable.rec),
                     contentDescription = "REC",
                     modifier = Modifier
                         .padding(8.dp)
+                        .size(25.dp)
                         .offset(8.dp, 8.dp),
                     tint = Color.Red
                 )
@@ -112,7 +134,7 @@ fun Camera(camera: Camera) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 if (camera.favorites) {
                     Icon(
-                        imageVector = Icons.Default.Star,
+                        painter = painterResource(id = R.drawable.star_filled),
                         contentDescription = "favorite",
                         modifier = Modifier
                             .padding(8.dp)
