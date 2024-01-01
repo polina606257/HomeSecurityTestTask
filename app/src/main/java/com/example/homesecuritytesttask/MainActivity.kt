@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.homesecuritytesttask.ui.theme.HomeSecurityTestTaskTheme
 import android.graphics.Color.parseColor
 import androidx.compose.ui.unit.sp
-import com.example.homesecuritytesttask.controller.CameraScreen
-import com.example.homesecuritytesttask.controller.DoorScreen
+import com.example.homesecuritytesttask.controller.cameras.CameraScreen
+import com.example.homesecuritytesttask.controller.doors.DoorScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

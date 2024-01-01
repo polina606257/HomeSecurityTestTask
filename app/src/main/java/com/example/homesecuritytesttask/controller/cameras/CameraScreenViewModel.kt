@@ -1,4 +1,4 @@
-package com.example.homesecuritytesttask.controller
+package com.example.homesecuritytesttask.controller.cameras
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -10,54 +10,56 @@ import com.example.homesecuritytesttask.data.repository.RepositoryLocal
 import com.example.homesecuritytesttask.data.repository.RepositoryLocalImpl
 import com.example.homesecuritytesttask.data.repository.RepositoryRemote
 import com.example.homesecuritytesttask.data.repository.RepositoryRemoteImpl
-import com.example.homesecuritytesttask.domain.Door
+import com.example.homesecuritytesttask.domain.Camera
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class DoorScreenViewModel : ViewModel() {
+class CameraScreenViewModel : ViewModel() {
     private val repositoryRemote: RepositoryRemote = RepositoryRemoteImpl()
     private val repositoryLocal: RepositoryLocal = RepositoryLocalImpl()
-    private val _doors: MutableLiveData<List<Door>> = MutableLiveData()
-    val doors: LiveData<List<Door>> = _doors
+    private val _cameras: MutableLiveData<List<Camera>> = MutableLiveData()
+    val cameras: LiveData<List<Camera>> = _cameras
     private val _isRefreshing = MutableLiveData(false)
     val isRefreshing: LiveData<Boolean> = _isRefreshing
-
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
 
     init {
         viewModelScope.launch {
-            val doors = getDoorsFromDatabase()
-            if (doors?.isEmpty() == true) {
-                getDoorsFromServer()
+            val cameras = getCamerasFromDatabase()
+            if (cameras?.isEmpty() == true) {
+                getCamerasFromServer()
             }
         }
     }
 
-    private fun getDoorsFromServer() {
+    private fun getCamerasFromServer() {
+        _isLoading.value = true
         viewModelScope.launch {
-            when (val doors = repositoryRemote.getDoors()) {
+            when (val cameras = repositoryRemote.getCameras()) {
                 is DataResult.Success -> {
-                    _doors.value = doors.response
-                    for (door in doors.response) {
-                        repositoryLocal.addDoor(door)
+                    _cameras.value = cameras.response
+                    for (camera in cameras.response) {
+                        repositoryLocal.addCamara(camera)
                     }
                 }
 
-                is DataResult.Error -> Log.d("TAG", "Can't find any doors")
+                is DataResult.Error -> Log.d("TAG", "Can't find any cameras")
             }
             _isRefreshing.value = false
+            _isLoading.value = false
         }
     }
 
-    private suspend fun getDoorsFromDatabase(): List<Door>? {
+    private suspend fun getCamerasFromDatabase(): List<Camera>? {
         val result = viewModelScope.async {
-            when (val doors = repositoryLocal.getAllDoors()) {
+            when (val cameras = repositoryLocal.getAllCameras()) {
                 is DataResult.Success -> {
-                    _doors.postValue(doors.response)
-                    doors.response
+                    _cameras.postValue(cameras.response)
+                    cameras.response
                 }
-
                 is DataResult.Error -> {
-                    Log.d("TAG", "Can't find any doors")
+                    Log.d("TAG", "Can't find any cameras")
                     null
                 }
             }
@@ -67,13 +69,13 @@ class DoorScreenViewModel : ViewModel() {
 
     fun refresh() {
         _isRefreshing.value = true
-        getDoorsFromServer()
+        getCamerasFromServer()
     }
 
-    fun updateDoor(door: Door) {
+    fun updateCamera(camera: Camera) {
         viewModelScope.launch {
-            async { repositoryLocal.updateDoor(door) }.await()
-            getDoorsFromDatabase()
+            async { repositoryLocal.updateCamera(camera) }.await()
+            getCamerasFromDatabase()
         }
     }
 }
