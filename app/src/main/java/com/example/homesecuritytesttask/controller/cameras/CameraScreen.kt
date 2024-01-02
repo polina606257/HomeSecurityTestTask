@@ -1,6 +1,5 @@
 package com.example.homesecuritytesttask.controller.cameras
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,7 +14,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.homesecuritytesttask.R
 import com.example.homesecuritytesttask.controller.components.ProgressIndicator
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -54,7 +52,7 @@ fun CameraScreen() {
         ) {
             LazyColumn {
                 items(cameras) { camera ->
-                    CameraItem(camera = camera)
+                    Camera(camera = camera)
                 }
             }
         }

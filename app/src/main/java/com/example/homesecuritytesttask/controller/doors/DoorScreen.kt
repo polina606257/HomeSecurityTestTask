@@ -36,7 +36,7 @@ fun DoorScreen() {
         ) {
             LazyColumn {
                 items(doors) { door ->
-                    DoorItem(door = door)
+                    Door(door = door)
                 }
             }
         }

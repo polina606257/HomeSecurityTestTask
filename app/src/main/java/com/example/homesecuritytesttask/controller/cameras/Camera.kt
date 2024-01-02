@@ -31,7 +31,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.homesecuritytesttask.R
 import com.example.homesecuritytesttask.domain.Camera
@@ -39,97 +38,95 @@ import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
-fun CameraItem(camera: Camera) {
+fun Camera(camera: Camera, modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<CameraScreenViewModel>()
+    val offsetX = rememberSaveable { mutableStateOf(0f) }
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        Camera(camera, modifier = Modifier.fillMaxSize())
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .border(1.dp, Color.LightGray, CircleShape)
+        Card(
+            modifier
+                .padding(vertical = 4.dp)
+                .fillMaxSize()
+                .offset { IntOffset(x = offsetX.value.roundToInt(), 0) }
+                .pointerInput(Unit) {
+                    detectHorizontalDragGestures { change, dragAmount ->
+                        val consumed = offsetX.value + dragAmount
+                        offsetX.value = consumed.coerceIn(-150f, 0f)
+                    }
+                },
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 2.dp
+            ),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White,
+            )
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.star),
-                contentDescription = "favorite",
-                tint = colorResource(id = R.color.yellow),
-                modifier = Modifier
-                    .size(30.dp)
-                    .clickable(onClick = {
-                        camera.favorites = !camera.favorites
-                        viewModel.updateCamera(camera)
-                    })
-            )
-        }
-    }
-}
-
-@Composable
-fun Camera(camera: Camera, modifier: Modifier = Modifier) {
-    val offsetX = rememberSaveable { mutableStateOf(0f) }
-
-    Card(
-        modifier
-            .padding(vertical = 4.dp)
-            .fillMaxSize()
-            .offset { IntOffset(x = offsetX.value.roundToInt(), 0) }
-            .pointerInput(Unit) {
-                detectHorizontalDragGestures { change, dragAmount ->
-                    val consumed = offsetX.value + dragAmount
-                    offsetX.value = consumed.coerceIn(-150f, 0f)
-                }
-            },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        )
-    ) {
-        Box {
-            AsyncImage(
-                model = camera.snapshot,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 10f)
-            )
-            if (camera.rec) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rec),
-                    contentDescription = "REC",
+            Box {
+                AsyncImage(
+                    model = camera.snapshot,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .padding(8.dp)
-                        .size(25.dp)
-                        .offset(8.dp, 8.dp),
-                    tint = Color.Red
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 10f)
                 )
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                if (camera.favorites) {
+                if (camera.rec) {
                     Icon(
-                        painter = painterResource(id = R.drawable.star_filled),
-                        contentDescription = "favorite",
+                        painter = painterResource(id = R.drawable.rec),
+                        contentDescription = "REC",
                         modifier = Modifier
                             .padding(8.dp)
-                            .offset(-8.dp, 8.dp),
-                        tint = Color.Yellow
+                            .size(25.dp)
+                            .offset(8.dp, 8.dp),
+                        tint = Color.Red
                     )
                 }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    if (camera.favorites) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.star_filled),
+                            contentDescription = "favorite",
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .offset(-8.dp, 8.dp),
+                            tint = Color.Yellow
+                        )
+                    }
+                }
+            }
+            Text(
+                text = camera.name,
+                modifier = Modifier.padding(24.dp),
+                fontSize = 17.sp,
+                color = colorResource(
+                    id = R.color.sub_title
+                )
+            )
+        }
+        // change favorite icon
+        if (offsetX.value < -100f) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .border(1.dp, Color.LightGray, CircleShape)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.star),
+                    contentDescription = "favorite",
+                    tint = colorResource(id = R.color.yellow),
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clickable(onClick = {
+                            camera.favorites = !camera.favorites
+                            viewModel.updateCamera(camera)
+                            offsetX.value = 0.0F
+                        })
+                )
             }
         }
-        Text(
-            text = camera.name,
-            modifier = Modifier.padding(24.dp),
-            fontSize = 17.sp,
-            color = colorResource(
-                id = R.color.sub_title
-            )
-        )
     }
 }

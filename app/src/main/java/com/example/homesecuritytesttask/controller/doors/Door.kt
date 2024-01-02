@@ -42,9 +42,10 @@ import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
-fun DoorItem(door: Door) {
+fun Door(door: Door) {
     val viewModel = koinViewModel<DoorScreenViewModel>()
     var isEditActive by rememberSaveable { mutableStateOf(false) }
+    val offsetX = rememberSaveable { mutableStateOf(0f) }
 
     Column {
         if (isEditActive) {
@@ -62,104 +63,103 @@ fun DoorItem(door: Door) {
                 .fillMaxSize()
                 .padding(8.dp)
         ) {
-            Door(door, modifier = Modifier.fillMaxSize())
-            Row(modifier = Modifier.align(Alignment.CenterEnd)) {
-                Box(
-                    modifier = Modifier
-                        .size(30.dp)
-                        .border(1.dp, Color.LightGray, CircleShape)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.edit),
-                        contentDescription = "edit",
+            Card(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .offset { IntOffset(x = offsetX.value.roundToInt(), 0) }
+                    .pointerInput(Unit) {
+                        detectHorizontalDragGestures { change, dragAmount ->
+                            val consumed = offsetX.value + dragAmount
+                            offsetX.value = consumed.coerceIn(-300f, 0f)
+                        }
+                    },
+                shape = RoundedCornerShape(20.dp),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 2.dp
+                ),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White,
+                )
+            ) {
+                if (door.snapshot != null) {
+                    AsyncImage(
+                        model = door.snapshot,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .align(Alignment.Center)
-                            .clickable(onClick = {
-                                isEditActive = true
-                            }),
-                        tint = colorResource(id = R.color.blue)
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 10f)
                     )
                 }
-                Spacer(modifier = Modifier.padding(end = 8.dp))
-                Box(
-                    modifier = Modifier
-                        .border(1.dp, Color.LightGray, CircleShape)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.star),
-                        contentDescription = "favorite",
-                        tint = colorResource(id = R.color.yellow),
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clickable(onClick = {
-                                door.favorites = !door.favorites
-                                viewModel.updateDoor(door)
-                            })
+                    Text(
+                        text = door.name,
+                        modifier = Modifier.padding(24.dp),
+                        fontSize = 17.sp,
+                        color = colorResource(
+                            id = R.color.sub_title
+                        )
                     )
+                    Row {
+                        if (door.favorites) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.star_filled),
+                                contentDescription = "favorite",
+                                tint = colorResource(id = R.color.yellow)
+                            )
+                        }
+                        Icon(
+                            painter = painterResource(id = R.drawable.lockon),
+                            contentDescription = "favorite",
+                            tint = colorResource(id = R.color.blue),
+                            modifier = Modifier.padding(end = 16.dp, start = 8.dp)
+                        )
+                    }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun Door(door: Door, modifier: Modifier) {
-    val offsetX = rememberSaveable { mutableStateOf(0f) }
-    Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .offset { IntOffset(x = offsetX.value.roundToInt(), 0) }
-            .pointerInput(Unit) {
-                detectHorizontalDragGestures { change, dragAmount ->
-                    val consumed = offsetX.value + dragAmount
-                    offsetX.value = consumed.coerceIn(-300f, 0f)
+            // icons for actions
+            if (offsetX.value < -200f) {
+                Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+                    Box(
+                        modifier = Modifier
+                            .size(30.dp)
+                            .border(1.dp, Color.LightGray, CircleShape)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.edit),
+                            contentDescription = "edit",
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .clickable(onClick = {
+                                    isEditActive = true
+                                    offsetX.value = 0.0F
+                                }),
+                            tint = colorResource(id = R.color.blue)
+                        )
+                    }
+                    Spacer(modifier = Modifier.padding(end = 8.dp))
+                    Box(
+                        modifier = Modifier
+                            .border(1.dp, Color.LightGray, CircleShape)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.star),
+                            contentDescription = "favorite",
+                            tint = colorResource(id = R.color.yellow),
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clickable(onClick = {
+                                    door.favorites = !door.favorites
+                                    viewModel.updateDoor(door)
+                                    offsetX.value = 0.0F
+                                })
+                        )
+                    }
                 }
-            },
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        )
-    ) {
-        if (door.snapshot != null) {
-            AsyncImage(
-                model = door.snapshot,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 10f)
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = door.name,
-                modifier = Modifier.padding(24.dp),
-                fontSize = 17.sp,
-                color = colorResource(
-                    id = R.color.sub_title
-                )
-            )
-            Row {
-                if (door.favorites) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.star_filled),
-                        contentDescription = "favorite",
-                        tint = colorResource(id = R.color.yellow)
-                    )
-                }
-                Icon(
-                    painter = painterResource(id = R.drawable.lockon),
-                    contentDescription = "favorite",
-                    tint = colorResource(id = R.color.blue),
-                    modifier = Modifier.padding(end = 16.dp, start = 8.dp)
-                )
             }
         }
     }
